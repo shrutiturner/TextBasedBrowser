@@ -152,5 +152,5 @@ files:
     TextBasedBrowserTest('browser.browser').run_tests()
   learner_created: false
 feedback_link: https://hyperskill.org/projects/79/stages/438/implement
-status: Unchecked
+status: Solved
 record: -1

@@ -1,5 +1,6 @@
 import os
 import sys
+from collections import deque
 
 nytimes_com = '''
 This New Liquid Is Magnetic, and Mesmerizing
@@ -40,6 +41,7 @@ folder_name = sys.argv[1]
 if not os.path.exists(folder_name):
     os.mkdir(folder_name)
 
+stack = deque()
 
 while True:
     input_str = input()
@@ -49,13 +51,27 @@ while True:
         file_name = ''.join(input_str.split('.')[:-1])
         file_path = os.path.join(folder_name, file_name)
         if input_str == "bloomberg.com":
+            stack.append("bloomberg.com")
             with open(file_path, 'w') as file:
                 file.write(bloomberg_com)
             print(bloomberg_com)
+            continue
         elif input_str == "nytimes.com":
+            stack.append("nytimes.com")
             with open(file_path, 'w') as file:
                 file.write(nytimes_com)
             print(nytimes_com)
+            continue
+    elif 'back' in input_str:
+        if len(stack) > 0:
+            if stack[-2] == "bloomberg.com":
+                print(bloomberg_com)
+                stack.pop()
+                continue
+            elif stack[-2] == "nytimes.com":
+                print(nytimes_com)
+                stack.pop()
+                continue
 
     try:
         file_path = os.path.join(folder_name, input_str)
