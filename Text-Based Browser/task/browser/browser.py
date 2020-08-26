@@ -1,6 +1,7 @@
 import os
 import requests
 import sys
+from bs4 import BeautifulSoup
 from collections import deque
 
 folder_name = sys.argv[1]
@@ -24,11 +25,15 @@ while True:
 
         web_request = requests.get(input_str)
 
+        soup = BeautifulSoup(web_request.content, 'html.parser')
+
+        text = soup.get_text()
+
         stack.append(input_str)
         with open(file_path, 'w') as file:
-            file.write(str(web_request.content))
+            file.write(text)
 
-        print(web_request.content)
+        print(text)
 """
         try:
             file_path = os.path.join(folder_name, input_str)
