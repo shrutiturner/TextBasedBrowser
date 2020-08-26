@@ -2,13 +2,15 @@ import os
 import requests
 import sys
 from bs4 import BeautifulSoup
+from colorama import init, Fore, Back, Style
 from collections import deque
+
+init()
 
 folder_name = sys.argv[1]
 if not os.path.exists(folder_name):
     os.mkdir(folder_name)
 
-stack = deque()
 
 while True:
     input_str = input()
@@ -27,27 +29,22 @@ while True:
 
         soup = BeautifulSoup(web_request.content, 'html.parser')
 
-        text = soup.get_text()
+        x = soup.find_all(['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'a', 'ul', 'ol', 'li'])
 
-        stack.append(input_str)
+        final_text = ''
+        for i in x:
+            if i.script:
+                i.script.extract()
+            _text = ''
+            if i.a:
+                _text += Fore.BLUE + i.text
+            else:
+                _text += i.text
+            final_text += _text
+
         with open(file_path, 'w') as file:
-            file.write(text)
+            file.write(final_text)
 
-        print(text)
-"""
-        try:
-            file_path = os.path.join(folder_name, input_str)
-            with open(file_path, 'r') as file:
-                print(file.read)
-        except FileNotFoundError:
-            print("Error: Incorrect URL")
-
-    elif 'back' in input_str:
-        if len(stack) > 0:
-            if stack[-2] == "bloomberg.com":
-                print(bloomberg_com)
-                stack.pop()
-                continue
-"""
+        print(final_text)
 
 
